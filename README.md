@@ -7,6 +7,6 @@ The data fold includes four subfolders: ‘tbm-vs-health’, ‘tbm-vs-dc’, �
 
 Abbreviation in CSV file: Hct, hematocrit; PLT, platelets; WBC, white blood cell counts;  N, neutrophils; L, lymphocytes; M, monocytes; Alb, albumin. RBC, red blood cell counts; Hb, hemoglobin.
 
-Usage: 
+Example: 
 
-python main.py selected-comparsion positive-label
+python main.py --data-folder data/ptb-vs-dc/ --positive-label PTB

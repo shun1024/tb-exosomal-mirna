@@ -8,20 +8,20 @@ from sklearn.metrics import roc_curve, auc
 from sklearn.model_selection import KFold
 
 
-def k_fold_validate(train_df, clf, positive_label, k=3, labels=['group', 'group property']):
+def k_fold_validate(train_df, clf, positive_label, labels, k=3):
 	"""Returns the best hyper-parameter according its performance in validation dataset
 
 	Args:
 		train_df: training dataframe
 		clf: basic used model
 		positive_label: positive label
-		k: number of fold
 		labels: unused features for modelling
+		k: number of fold
 
 	Returns: accuracy, AUC, actual label, predictions
 	"""
 	keys = [key for key in train_df.keys() if key not in labels]
-	X, y = train_df[keys].as_matrix(), train_df['group'].as_matrix()
+	X, y = train_df[keys].as_matrix(), train_df['group property'].as_matrix()
 	y = np.array([1 if tmp == positive_label else 0 for tmp in y])
 
 	scores, pred_y = [], []
@@ -42,7 +42,7 @@ def k_fold_validate(train_df, clf, positive_label, k=3, labels=['group', 'group 
 	return valid_acc, valid_auc, y, np.array(pred_y)
 
 
-def best_hp_select(train_df, positive_label):
+def best_hp_select(train_df, positive_label, labels=['group', 'group property']):
 	"""Returns the best hyper-parameter according its performance in validation dataset
 
 	Args:
@@ -59,7 +59,7 @@ def best_hp_select(train_df, positive_label):
 	for i in range(30):
 		hp = 1.5 ** (i - 15)
 		clf = SVC(C=hp, probability=True, kernel='linear', class_weight='balanced')
-		valid_acc, valid_auc, valid_actual, valid_predictions = k_fold_validate(train_df, clf, positive_label)
+		valid_acc, valid_auc, valid_actual, valid_predictions = k_fold_validate(train_df, clf, positive_label, labels)
 		aucs.append(valid_auc)
 		hps.append(hp)
 
@@ -70,6 +70,13 @@ def best_hp_select(train_df, positive_label):
 
 	best_hp = hps[np.argmax(aucs)]
 	best_clf = SVC(C=best_hp, probability=True, kernel='linear')
+
+	keys = [key for key in train_df.keys() if key not in labels]
+	X, y = train_df[keys].as_matrix(), train_df['group property'].as_matrix()
+	y = np.array([1 if tmp == positive_label else 0 for tmp in y])
+	best_clf.fit(X, y
+	             )
+
 	return best_clf, (hps, aucs), (best_valid_actual, best_valid_predictions)
 
 
@@ -86,7 +93,7 @@ def test_model(test_df, clf, positive_label, labels=['group', 'group property'])
 	"""
 
 	keys = [key for key in test_df.keys() if key not in labels]
-	X, y = test_df[keys].as_matrix(), test_df['group'].as_matrix()
+	X, y = test_df[keys].as_matrix(), test_df['group property'].as_matrix()
 	y = np.array([1 if tmp == positive_label else 0 for tmp in y])
 	pred_y = clf.predict_proba(X)[:, 1]
 	false_positive_rate, true_positive_rate, thresholds = roc_curve(y, pred_y)

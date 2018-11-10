@@ -1,0 +1,43 @@
+*npy
+*events.ou*
+*.pbtxt
+*checkpoint
+
+*.meta
+*.index
+*data*of*
+*.sh
+*.txt
+*.pt
+*.swp
+*.pyc
+*.py~
+.DS_Store
+.idea
+.vscode
+
+# Setuptools distribution and build folders.
+/dist/
+/build
+keys/
+
+# Virtualenv
+/env
+
+# Python egg metadata, regenerated from source files by setuptools.
+/*.egg-info
+
+*.sublime-project
+*.sublime-workspace
+
+.idea
+
+logs/
+
+.ipynb_checkpoints
+ghostdriver.log
+
+htmlcov
+
+junk
+src
